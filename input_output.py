@@ -8,15 +8,17 @@
 
 import argparse
 import re
+import test
 
 
-SIGMA = "(@sigma)\s*=\s*(\{\w+(,\s?\w*)*\})" 
-STATES = "(@Q)\s*=\s*(\{\w+(,\s?\w*)*\})" 
-TRANSITIONS = "(@f)\s*=\s*(\{\[\@*\w*,\w+,\@*\w+]*})"
-START_STATE = "(@q0)\s*=\s*(q1)"  
+SIGMA = "(@sigma)\s*=\s*(\{\w+(\s*,\s*\w*)*\})" 
+STATES = "(@Q)\s*=\s*(\{[a-zA-Z]+\d+(\s*,\s*[a-zA-Z]+\d*)*\})" 
+TRANSITIONS = "(@f)\s*=\s*({\([a-zA-Z]+\d\s*\d\)\s*->\s*[a-zA-Z]+\d+(\s*,\s*\([a-zA-Z]+\d\s*\d\)\s*->\s*[a-zA-Z]+\d)*\})"
+START_STATE = "(@q0)\s*=\s*([a-zA-Z]+\d)"  
 FINAL_STATE ="(@F)\s*=\s*(\{\w+(,\s?\w*)*\})" 
 TEST_STRINGS ="(@test)\s*=\s*(\{\w+(,\s?\w*)*\})"
-REAL_STRINGS ="(@respuesta)\s*=\s*(\{\w+(,\s?\w*)*\})"
+REAL_STRINGS ="(@result)\s*=\s*(\{\w+(,\s?\w*)*\})"
+TRANSITION_INCOMPLETE = "(@f)\s*=\s*\{(\([a-zA-Z]+\d\s*\d\)->\s*,?)"
 
 PATTERNS_CONFIG_FILE = [SIGMA,
                         STATES,
@@ -44,8 +46,13 @@ def load_config_file(file_path: str) -> dict:
     for pattern in PATTERNS_CONFIG_FILE:
         re_obj = re.compile(pattern)
         result = re_obj.search(text)
+        if result is None:
+            re_obj = re.compile(TRANSITION_INCOMPLETE)
+            result = re_obj.search(text)
+            transitionID = result.group(1)
+            transitionFunction = result.group(2)
+            test.check_empty_transition(transitionID,transitionFunction)
         config_dict[result.group(1)] = result.group(2)
-
     return config_dict    
 
 
