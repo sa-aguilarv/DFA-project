@@ -16,7 +16,7 @@ import pandas as pd
 TRANSITION_CHECK = "\(([a-zA-Z]+\d)\s*(\d)\)\s*->\s*([a-zA-Z]+\d)"
 
 
-def validate_transitions(transitions) -> pd.DataFrame:
+def validate_transitions(transitions,states,sigma) -> pd.DataFrame:
     """Organizes transition functions in DataFrame object.
 
     Args:
@@ -28,7 +28,7 @@ def validate_transitions(transitions) -> pd.DataFrame:
     before_state = []
     after_state = []
     transition_string = []
-
+    
     for transition in transitions:
         re_obj = re.compile(TRANSITION_CHECK)
         result = re_obj.search(transition)
@@ -36,11 +36,26 @@ def validate_transitions(transitions) -> pd.DataFrame:
         transition_string.append(result.group(2))
         after_state.append(result.group(3))
     
+    for item in before_state:
+        if item not in states:
+            print("\nValueError: transition state <"+item+"> not in available states "+str(states)+".")
+            raise SystemExit(0)
+    
+    for item in after_state:
+        if item not in states:
+            print("\nValueError: transition state <"+item+"> not in available states "+str(states)+".")
+            raise SystemExit(0)
+    
+    for item in transition_string:
+        if item not in sigma:
+            print("\nValueError: transition string <"+item+"> not in sigma "+str(sigma)+".")
+            raise SystemExit(0)
+    
     transitions_dict = {"before": before_state,
                         "input": transition_string, 
                         "after": after_state}
-
-    transitions_df = pd.DataFrame(transitions_dict)                
+    
+    transitions_df = pd.DataFrame(transitions_dict)
     return transitions_df
 
 
