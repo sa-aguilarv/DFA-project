@@ -2,7 +2,7 @@
 
 The DFA works based on a definition that is in a given configuration file (see __inputs__ folder to see example files).
 
-Output files are in *.csv format (see __automata_correct_results.csv__)
+Output files are in *.csv format (see __automata_correct_results.csv__).
 
 # Evaluation
 
