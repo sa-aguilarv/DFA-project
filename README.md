@@ -4,6 +4,10 @@ The DFA works based on a definition that is in a given configuration file (see _
 
 Output files are in *.csv format (see __automata_correct_results.csv__).
 
+**NOTE**: For this project to work, <pandas> Python library is required. You may install it with:
+$ pip install pandas
+or follow installation instructions found in https://pandas.pydata.org/docs/getting_started/install.html
+
 # Evaluation
 
 The Deteministic Finite Automaton (DFA) implementation in Python followed these evaluation criteria:
