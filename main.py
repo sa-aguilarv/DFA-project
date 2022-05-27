@@ -9,9 +9,11 @@
 """
 
 
+from cmd import PROMPT
 import input_output as io
 import test
 import DFA
+import pandas as pd
 
 
 def main():
@@ -51,16 +53,28 @@ def main():
 
     test_strings = config_dict["@test"].split(",")
     test_strings = [test_strings.strip("{ }") for test_strings in test_strings]
+    test_strings = test.validate_test_strings(test_strings,sigma)
 
     real_results = config_dict["@result"].split(",")
     real_results = [real_results.strip("{ }") for real_results in real_results]
 
-    DFA.generate_automaton(sigma,
-                            states,
-                            transitions_df,
+    predictions = DFA.generate_automaton(transitions_df,
                             start_state,
                             final_state,
                             test_strings)
+
+    output_dict = {"test-word": test_strings,
+                    "prediction": predictions,
+                    "expected-result": real_results}
+
+    output_df = pd.DataFrame(output_dict)
+    output_df['incorrect'] = (output_df['prediction']==output_df['expected-result']).astype(int)
+
+    print(output_df)
+
+    answer = input("\nSave output as *.csv file [y/n]?\n")
+    io.write_output_file(answer, output_df)
+
 
 if __name__ == "__main__":
     main()

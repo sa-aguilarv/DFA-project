@@ -2,10 +2,18 @@
     ------------
     Functions
     ------------
+    validate_transitions:
+        Organizes transition functions in DataFrame object.
+    check_empty_transition:
+        Raises error for empty transition.
+    check_incomplete_transitions:
+        Raises error for incomplete transitions function.
     validate_start_state:
         Validates start state input value.
     validate_final_states:
         Validates final state(s) input value(s).
+    validate_test_strings:
+        Validates test strings input values.
     """
 
 
@@ -13,7 +21,7 @@ import re
 import pandas as pd
 
 
-TRANSITION_CHECK = "\(([a-zA-Z]+\d)\s*(\d)\)\s*->\s*([a-zA-Z]+\d)"
+TRANSITION_CHECK = "\(([a-zA-Z]+\d)\s*(\w)\)\s*->\s*([a-zA-Z]+\d)"
 
 
 def validate_transitions(transitions,states,sigma) -> pd.DataFrame:
@@ -73,6 +81,16 @@ def check_empty_transition(transitionID,transitionFunction):
     raise SystemExit(0)
 
 
+def check_incomplete_transitions():
+    """Raises error for incomplete transitions function.
+
+    Raises:
+        SystemExit: if incomplete transitions function is found.
+    """
+    print("\nValueError: given transition functions are insufficient for DFA to work properly.")
+    raise SystemExit(0)
+
+
 def validate_start_state(start_state, states) -> list:
     """Validates start state input value.
 
@@ -117,3 +135,22 @@ def validate_final_states(final_state, states) -> list:
         print("\nValueError: final state(s) "+str(error_states) +" not in available states "+str(states)+".")
         raise SystemExit(0)
     return final_state
+
+def validate_test_strings(test_strings, sigma) -> list:
+    """Validates test strings input values.
+    Args:
+        test_strings (list): words list to evaluate the DFA's performance.
+        sigma (list): alphabet.
+
+    Raises:
+        SystemExit: if letter in word isn't part of the alphabet.
+
+    Returns:
+        list: validated test strings.
+    """
+    for word in test_strings:
+        for letter in word:
+            if letter not in sigma:
+                print("\nValueError: letter "+letter+" in word <"+word+"> isn't part of alphabet "+str(sigma)+".")
+                raise SystemExit(0)
+    return test_strings

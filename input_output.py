@@ -2,18 +2,24 @@
     ------------
     Functions
     ------------
-    load_config_file(file_path:str)->dict
+    load_config_file:
+        Reads the config file and creates a dictionary with the configuration information for use in DFA.
+    parse_input:
+        Reads the arguments of DFA.
+    write_output_file:
+        Saves output as *csv file.
 """
 
 
 import argparse
 import re
 import test
+import pandas as pd
 
 
 SIGMA = "(@sigma)\s*=\s*(\{\w+(\s*,\s*\w*)*\})" 
 STATES = "(@Q)\s*=\s*(\{[a-zA-Z]+\d+(\s*,\s*[a-zA-Z]+\d*)*\})" 
-TRANSITIONS = "(@f)\s*=\s*({\([a-zA-Z]+\d\s*\d\)\s*->\s*[a-zA-Z]+\d+(\s*,\s*\([a-zA-Z]+\d\s*\d\)\s*->\s*[a-zA-Z]+\d)*\})"
+TRANSITIONS = "(@f)\s*=\s*({\([a-zA-Z]+\d\s*\w\)\s*->\s*[a-zA-Z]+\d+(\s*,\s*\([a-zA-Z]+\d\s*\w\)\s*->\s*[a-zA-Z]+\d)*\})"
 START_STATE = "(@q0)\s*=\s*([a-zA-Z]+\d)"  
 FINAL_STATE ="(@F)\s*=\s*(\{\w+(,\s?\w*)*\})" 
 TEST_STRINGS ="(@test)\s*=\s*(\{\w+(,\s?\w*)*\})"
@@ -32,7 +38,7 @@ PATTERNS_CONFIG_FILE = [SIGMA,
 
 def load_config_file(file_path: str) -> dict:
     """Load config file
-    Read the config file and create a dictionary with the configuration information for used in SACS
+    Reads the config file and creates a dictionary with the configuration information for use in DFA.
     Args:
         file_path (str): File path and name of the configuration file
     Returns:
@@ -56,34 +62,10 @@ def load_config_file(file_path: str) -> dict:
     return config_dict    
 
 
-# NOTE: Edit SACS function
-# def formatted_output(results: list):
-#     """Write a formated table with the results of the comparison
-#     The table contains a header with the information. Every row represents the evaluation of one sorting algorithm on a list of elements
-#     Args:
-#         results (list): The results obtained from the differents comparisons. The results argument is list of Tuples, every Tuple contains: (algorith_name, physical_address, sorted_list, elapsed_time)
-#     """
-#     header = "{0:^10}|{1:^20}|{2:^30}|{3:^30}"
-#     row = "{algorithm:^10}|{address:^20X}|{lista!s:^30}|{time:^30}"
-#     print(
-#         header.format("Algorithm",
-#                     "Physical address",
-#                     "List",
-#                     "Execution time"))
-#     for value in results:
-#         algorithm = value[0]
-#         sorted_list = value[1]
-#         print(
-#             row.format(algorithm=algorithm,
-#                         address=id(sorted_list),
-#                         lista=sorted_list["sorted_list"],
-#                         time=sorted_list["elapsed_time"]))
-
-
 def parse_input() -> argparse.Namespace:
-    """Reads the arguments of DFA
+    """Reads the arguments of DFA.
     Returns:
-        argparse.Namespace: The object argparse.Namespace where the command line arguments are stored
+        argparse.Namespace: The object argparse.Namespace where the command line arguments are stored.
     """
     parser = argparse.ArgumentParser(
         description='Time comparison of several sorting algorithms')
@@ -96,10 +78,19 @@ def parse_input() -> argparse.Namespace:
         '--output',
         help='Path and file name were the results are written. '
         'If not indicated, the results are written in the standard output')
-
     return parser.parse_args()
 
 
-# NOTE: Add function that writes output in txt file
-def write_output_file():
-    pass
+def write_output_file(answer, output_df):
+    """Saves output as *csv file.
+
+    Args:
+        answer (str): [y/n] option given by user. If 'y', *.csv file is saved.
+        output_df (pd.DataFrame): table with DFA's performance results.
+    """
+    answer = answer.lower()
+    if answer == "y":
+        name = input("\nType in output's filename (*.csv extension will be added): ")
+        output_df.to_csv(name+".csv")
+    else:
+        print("ValueError: incorrect answer. Please run again and type [y/n].")

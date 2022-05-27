@@ -1,0 +1,8 @@
+,test-word,prediction,expected-result,incorrect
+0,1,True,True,0
+1,0,False,False,0
+2,11,True,True,0
+3,101,True,True,0
+4,01010,False,False,0
+5,000,False,False,0
+6,111111,True,True,0

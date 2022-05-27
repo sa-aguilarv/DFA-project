@@ -1,3 +1,9 @@
+# Deteministic Finite Automaton (DFA)
+
+The DFA works based on a definition that is in a given configuration file (see __inputs__ folder to see example files).
+
+Output files are in *.csv format (see __automata_correct_results.csv__)
+
 # Evaluation
 
 The Deteministic Finite Automaton (DFA) implementation in Python followed these evaluation criteria:
@@ -13,14 +19,14 @@ The Deteministic Finite Automaton (DFA) implementation in Python followed these 
 - The user's interface allows to show the system's documentation for guidance using the command <help>. [DONE]
 
 **3. DFA Functionality**
- - System's outputs correspond to expected results in validated strings.
- - The program reads different definitions of DFA.
- - The program doesn't loop indefinitely and always responds to an accepting or rejecting state.
+ - System's outputs correspond to expected results in validated strings. [DONE]
+ - The program reads different definitions of DFA. [DONE]
+ - The program doesn't loop indefinitely and always responds to an accepting or rejecting state. [DONE]
 
 **4. Functional requirements**
  - Information is read through a configuration file. [DONE]
- - The information is written/shown through CLI [DONE] or an output file as indicated by the user.
- - The comparisons (calculated vs expected result) show in tabular form.
+ - The information is written/shown through CLI [DONE] or an output file as indicated by the user [DONE].
+ - The comparisons (calculated vs expected result) show in tabular form. [DONE]
 
 **5. Input validation**
 - Transition function (states and input string) is validated [DONE].
